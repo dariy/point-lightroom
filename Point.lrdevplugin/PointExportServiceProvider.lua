@@ -14,16 +14,42 @@ exportServiceProvider.titleForPublishedCollection_standalone = "Post"
 exportServiceProvider.titleForPublishedSmartCollection = "Smart Post"
 exportServiceProvider.titleForPublishedSmartCollection_standalone = "Smart Post"
 
+exportServiceProvider.exportPresetFields = {
+    { key = 'apiUrl', default = '' },
+    { key = 'apiToken', default = '' },
+}
+
 function exportServiceProvider.sectionsForTopOfDialog(f, propertyTable)
     return {
         {
             title = 'Point API Configuration',
-            f:row {
-                f:static_text {
-                    title = 'Configure the API URL and Token in the Plug-in Manager.',
-                    fill_horizontal = 1,
+            f:column {
+                spacing = f:control_spacing(),
+                f:row {
+                    f:static_text {
+                        title = 'API URL:',
+                        alignment = 'right',
+                        width = LrView.share 'label_width',
+                    },
+                    f:edit_field {
+                        value = LrView.bind('apiUrl'),
+                        width_in_chars = 30,
+                        fill_horizontal = 1,
+                    },
                 },
-            },
+                f:row {
+                    f:static_text {
+                        title = 'API Token:',
+                        alignment = 'right',
+                        width = LrView.share 'label_width',
+                    },
+                    f:password_field {
+                        value = LrView.bind('apiToken'),
+                        width_in_chars = 30,
+                        fill_horizontal = 1,
+                    },
+                },
+            }
         },
     }
 end
@@ -37,13 +63,19 @@ function exportServiceProvider.processRenderedPhotos(functionContext, exportCont
         title = nPhotos > 1 and ("Exporting " .. nPhotos .. " photos to Point") or "Exporting photo to Point",
     })
 
-    local LrPrefs = import 'LrPrefs'
-    local prefs = LrPrefs.prefsForPlugin()
-    local apiUrl = prefs.apiUrl
-    local apiToken = prefs.apiToken
+    local apiUrl = exportSettings.apiUrl
+    local apiToken = exportSettings.apiToken
+
+    -- Fallback to global plugin preferences
+    if not apiUrl or apiUrl == "" then
+        local LrPrefs = import 'LrPrefs'
+        local prefs = LrPrefs.prefsForPlugin()
+        apiUrl = prefs.apiUrl
+        apiToken = prefs.apiToken
+    end
 
     if not apiUrl or apiUrl == "" or not apiToken or apiToken == "" then
-        LrDialogs.message("Export Error", "Please configure the Point API URL and Token in the Plug-in Manager.", "critical")
+        LrDialogs.message("Export Error", "Please configure the Point API URL and Token in the Export/Publish settings.", "critical")
         progressScope:done()
         return
     end
