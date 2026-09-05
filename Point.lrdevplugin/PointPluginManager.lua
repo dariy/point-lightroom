@@ -24,30 +24,33 @@ function PluginManager.sectionsForTopOfDialog( f, propertyTable )
     return {
         {
             title = "Point API Settings",
-            f:row {
-                f:static_text {
-                    title = 'API URL:',
-                    alignment = 'right',
-                    width = LrView.share 'label_width',
+            f:column {
+                spacing = f:control_spacing(),
+                f:row {
+                    f:static_text {
+                        title = 'API URL:',
+                        alignment = 'right',
+                        width = LrView.share 'label_width',
+                    },
+                    f:edit_field {
+                        value = LrBinding.bind('apiUrl'),
+                        width_in_chars = 30,
+                        fill_horizontal = 1,
+                    },
                 },
-                f:edit_field {
-                    value = LrBinding.bind('apiUrl'),
-                    width_in_chars = 30,
-                    fill_horizontal = 1,
+                f:row {
+                    f:static_text {
+                        title = 'API Token:',
+                        alignment = 'right',
+                        width = LrView.share 'label_width',
+                    },
+                    f:password_field {
+                        value = LrBinding.bind('apiToken'),
+                        width_in_chars = 30,
+                        fill_horizontal = 1,
+                    },
                 },
-            },
-            f:row {
-                f:static_text {
-                    title = 'API Token:',
-                    alignment = 'right',
-                    width = LrView.share 'label_width',
-                },
-                f:password_field {
-                    value = LrBinding.bind('apiToken'),
-                    width_in_chars = 30,
-                    fill_horizontal = 1,
-                },
-            },
+            }
         }
     }
 end
