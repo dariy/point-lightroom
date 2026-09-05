@@ -1,4 +1,4 @@
-local LrBinding = import 'LrBinding'
+
 local LrDialogs = import 'LrDialogs'
 local LrView = import 'LrView'
 local LrFileUtils = import 'LrFileUtils'

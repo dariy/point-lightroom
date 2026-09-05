@@ -1,4 +1,4 @@
-local LrBinding = import 'LrBinding'
+
 local LrDialogs = import 'LrDialogs'
 local LrView = import 'LrView'
 local LrPrefs = import 'LrPrefs'
@@ -33,7 +33,7 @@ function PluginManager.sectionsForTopOfDialog( f, propertyTable )
                         width = LrView.share 'label_width',
                     },
                     f:edit_field {
-                        value = LrBinding.bind('apiUrl'),
+                        value = LrView.bind('apiUrl'),
                         width_in_chars = 30,
                         fill_horizontal = 1,
                     },
@@ -45,7 +45,7 @@ function PluginManager.sectionsForTopOfDialog( f, propertyTable )
                         width = LrView.share 'label_width',
                     },
                     f:password_field {
-                        value = LrBinding.bind('apiToken'),
+                        value = LrView.bind('apiToken'),
                         width_in_chars = 30,
                         fill_horizontal = 1,
                     },
