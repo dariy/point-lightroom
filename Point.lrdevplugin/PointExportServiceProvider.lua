@@ -1,7 +1,7 @@
 
 local LrDialogs = import 'LrDialogs'
 local LrView = import 'LrView'
-local LrFileUtils = import 'LrFileUtils'
+local LrPathUtils = import 'LrPathUtils'
 local LrHttp = import 'LrHttp'
 
 local PointAPI = require 'PointAPI'
@@ -93,7 +93,7 @@ function exportServiceProvider.processRenderedPhotos(functionContext, exportCont
         end
 
         if success then
-            local fileName = LrFileUtils.leafName(pathOrMessage)
+            local fileName = LrPathUtils.leafName(pathOrMessage)
             progressScope:setCaption("Uploading " .. fileName .. "...")
             
             local uploadSuccess, uploadMessage = PointAPI.uploadMedia(apiUrl, apiToken, pathOrMessage, fileName)
