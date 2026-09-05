@@ -85,7 +85,7 @@ function exportServiceProvider.processRenderedPhotos(functionContext, exportCont
 
     for i, rendition in exportContext:renditions { stopIfCanceled = true } do
         progressScope:setPortionComplete(i - 1, nPhotos)
-        
+
         local success, pathOrMessage = rendition:waitForRender()
 
         if progressScope:isCanceled() then
@@ -95,16 +95,16 @@ function exportServiceProvider.processRenderedPhotos(functionContext, exportCont
         if success then
             local fileName = LrPathUtils.leafName(pathOrMessage)
             progressScope:setCaption("Uploading " .. fileName .. "...")
-            
+
             local uploadSuccess, uploadMessage = PointAPI.uploadMedia(apiUrl, apiToken, pathOrMessage, fileName)
-            
+
             if not uploadSuccess then
                 table.insert(errors, "Failed to upload " .. fileName .. ": " .. uploadMessage)
             else
                 local mediaPath = string.match(uploadMessage, '"path":%s*"([^"]+)"')
                 if mediaPath then
                     table.insert(uploadedImages, mediaPath)
-                    
+
                     if exportSettings.LR_exportServiceProviderType == 'publish' then
                         local baseUrl = apiUrl
                         baseUrl = string.gsub(baseUrl, "/api/media/upload/?$", "")
@@ -112,10 +112,10 @@ function exportServiceProvider.processRenderedPhotos(functionContext, exportCont
                         if string.sub(baseUrl, -1) == "/" then
                             baseUrl = string.sub(baseUrl, 1, -2)
                         end
-                        
+
                         -- Check if mediaPath starts with slash just in case
                         local fullMediaUrl = baseUrl .. (string.sub(mediaPath, 1, 1) == "/" and "" or "/") .. mediaPath
-                        
+
                         rendition:recordPublishedPhotoId(mediaPath)
                         rendition:recordPublishedPhotoUrl(fullMediaUrl)
                     end
@@ -132,7 +132,7 @@ function exportServiceProvider.processRenderedPhotos(functionContext, exportCont
         progressScope:setCaption("Creating draft post...")
         local contentLines = {}
         for _, path in ipairs(uploadedImages) do
-            table.insert(contentLines, "![](" .. path .. ")")
+            table.insert(contentLines, path)
         end
         local postContent = table.concat(contentLines, "\n\n")
 
@@ -146,7 +146,7 @@ function exportServiceProvider.processRenderedPhotos(functionContext, exportCont
                 if string.sub(baseUrl, -1) == "/" then
                     baseUrl = string.sub(baseUrl, 1, -2)
                 end
-                
+
                 local editUrl = baseUrl .. "/light/posts/" .. postId .. "/edit"
                 LrHttp.openUrlInBrowser(editUrl)
             else
