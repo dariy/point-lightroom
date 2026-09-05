@@ -8,6 +8,12 @@ local PointAPI = require 'PointAPI'
 
 local exportServiceProvider = {}
 
+exportServiceProvider.supportsIncrementalPublish = true
+exportServiceProvider.titleForPublishedCollection = "Post"
+exportServiceProvider.titleForPublishedCollection_standalone = "Post"
+exportServiceProvider.titleForPublishedSmartCollection = "Smart Post"
+exportServiceProvider.titleForPublishedSmartCollection_standalone = "Smart Post"
+
 function exportServiceProvider.sectionsForTopOfDialog(f, propertyTable)
     return {
         {
@@ -66,6 +72,21 @@ function exportServiceProvider.processRenderedPhotos(functionContext, exportCont
                 local mediaPath = string.match(uploadMessage, '"path":%s*"([^"]+)"')
                 if mediaPath then
                     table.insert(uploadedImages, mediaPath)
+                    
+                    if exportSettings.LR_exportServiceProviderType == 'publish' then
+                        local baseUrl = apiUrl
+                        baseUrl = string.gsub(baseUrl, "/api/media/upload/?$", "")
+                        baseUrl = string.gsub(baseUrl, "/api/posts/?$", "")
+                        if string.sub(baseUrl, -1) == "/" then
+                            baseUrl = string.sub(baseUrl, 1, -2)
+                        end
+                        
+                        -- Check if mediaPath starts with slash just in case
+                        local fullMediaUrl = baseUrl .. (string.sub(mediaPath, 1, 1) == "/" and "" or "/") .. mediaPath
+                        
+                        rendition:recordPublishedPhotoId(mediaPath)
+                        rendition:recordPublishedPhotoUrl(fullMediaUrl)
+                    end
                 else
                     table.insert(errors, "Failed to parse upload response for " .. fileName)
                 end
@@ -108,6 +129,13 @@ function exportServiceProvider.processRenderedPhotos(functionContext, exportCont
 
     if #errors > 0 then
         LrDialogs.message("Export Completed with Errors", table.concat(errors, "\n"), "warning")
+    end
+end
+
+function exportServiceProvider.deletePhotosFromPublishedCollection(publishSettings, arrayOfPhotoIds, deletedCallback, localCollectionId)
+    -- Simply acknowledge the deletion so Lightroom clears them from the "Deleted Photos to Remove" queue.
+    for i, photoId in ipairs(arrayOfPhotoIds) do
+        deletedCallback(photoId)
     end
 end
 
