@@ -23,11 +23,21 @@ This plugin allows you to seamlessly export rendered photos from Adobe Lightroom
 
 Before using the plugin, you must configure it with your Point server credentials.
 
+### 1. Create an API Key in Point
+
+1. Log in to your Point dashboard.
+2. Navigate to **Plugins** (the `/light/plugins` page).
+3. In the **API Keys** panel, click **Create API Key**.
+4. Enter a name for the key (e.g., "Lightroom") and click **Create**.
+5. Copy the generated API key. Make sure to save it, as it will not be shown again.
+
+### 2. Configure the Plugin in Lightroom
+
 1. Open the Lightroom **Plug-in Manager** (`File > Plug-in Manager...`).
 2. Select **Point Export** from the list of installed plug-ins on the left.
 3. In the right panel, find the **Point API Settings** section.
 4. Enter your **API URL** (e.g., `https://your-point-site.com`). The plugin will automatically handle formatting the endpoints.
-5. Enter your **API Token**. You can generate a personal access token from your Point dashboard.
+5. Enter the **API Token** you generated in the previous step.
 
 ## Usage
 

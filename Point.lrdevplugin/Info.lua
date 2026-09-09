@@ -1,6 +1,6 @@
 return {
     LrSdkVersion = 3.0,
-    LrToolkitIdentifier = 'com.point.lightroom.export',
+    LrToolkitIdentifier = 'photos.point.lightroom.export',
     LrPluginName = 'Point Export',
     LrExportServiceProvider = {
         title = 'Point Photo Blog',
